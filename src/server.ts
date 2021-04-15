@@ -10,7 +10,15 @@ express()
   .use(
     compression({ threshold: 0 }),
     sirv('static', { dev }),
-    sapper.middleware()
+    sapper.middleware({
+      session: () => {
+        return false
+        
+        return {
+          s: 2
+        }
+      }
+    })
   )
   .listen(PORT, () => {
     // console.log('Listening')
