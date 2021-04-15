@@ -1,5 +1,6 @@
-import * as sapper from '@sapper/app';
+import * as sapper from '@sapper/app'
+import 'uikit'
 
 sapper.start({
-	target: document.querySelector('#app')
-});
+  target: document.querySelector('#app')
+})
