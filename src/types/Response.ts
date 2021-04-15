@@ -4,11 +4,11 @@ export type Response<T = any> =
 
 export default Response;
 
-export function createResponse<T>(status: true, data: T) : Response<T>;
-export function createResponse(status: false, error: string): Response;
+export function createResponse<T>(status: true, data?: T): Response<T>;
+export function createResponse(status: false, error?: string): Response;
 export function createResponse<T>(
   status: boolean,
-  data_or_error: T
+  data_or_error?: T
 ): Response<T> {
   if (status) {
     return {
