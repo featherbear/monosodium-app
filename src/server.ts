@@ -13,7 +13,8 @@ if (!process.env.APP_SECRET) {
     `APP_SECRET not set, using random value`
   );
 
-}
+import { Mongo } from "../../monosodium-commons";
+Mongo.doConnect()
 
 express()
   .use(
