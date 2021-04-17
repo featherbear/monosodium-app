@@ -12,11 +12,10 @@ export async function createUser(username, password) {
       password: passwordHash,
       sessions: [],
     },
-    FB_AUTH: null, // null
-    // FB_AUTH: {
-    //   uid: null,
-    //   session: null,
-    // },
+    FB_AUTH: {
+      uid: null,
+      session: null,
+    },
     SETTINGS: {},
     QUEUE: [],
   });
