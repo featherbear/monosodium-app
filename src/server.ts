@@ -2,6 +2,7 @@ import sirv from 'sirv'
 import express from 'express'
 import compression from 'compression'
 import cookieParser from "cookie-parser";
+import { verify as verifyJWT } from "./utils/JWT";
 
 const { PORT, NODE_ENV } = process.env
 const dev = NODE_ENV === 'development'
@@ -23,12 +24,18 @@ express()
     sirv('static', { dev }),
     sapper.middleware({
       session: (req, res) => {
-        let session = (req.cookies || {}).msgSession;
+        let jwt = (req.cookies || {}).msgSession;
 
-        if (session) {
-          return {
-            session,
-          };
+        if (jwt) {
+          let session = verifyJWT(jwt);
+
+          // TODO: Check against the session hashes
+
+          if (session) {
+            return {
+              session,
+            };
+          }
         }
 
         return false;
