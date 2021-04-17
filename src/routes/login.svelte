@@ -19,7 +19,7 @@
       if (resp.status == false) {
         alert(resp.error);
       } else {
-        
+        location.href = "/";
       }
     } finally {
       isRequest = false;

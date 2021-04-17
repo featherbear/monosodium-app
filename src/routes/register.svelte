@@ -30,6 +30,7 @@
       if (resp.status == false) {
         alert(resp.error);
       } else {
+        location.href = "/setup";
       }
     } finally {
       isRequest = false;
