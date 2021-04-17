@@ -25,14 +25,23 @@ export async function post(req, res) {
   let user = await asUser(username);
   if (!user) return uhOh();
 
-  if (user.FB_AUTH === null) {
+  // TODO: Check some queue for in-testing accounts
+  if (!user.FB_AUTH.uid) {
     // Uninitialised
     return res.end(JSON.stringify(createResponse(true, null)));
   } else if (user.FB_AUTH.session) {
     // Session supposedly active
-    return res.end(JSON.stringify(createResponse(true, true)));
+    return res.end(
+      JSON.stringify(
+        createResponse(true, { uid: user.FB_AUTH.uid, active: true })
+      )
+    );
   } else {
     // Session is null (set by service)
-    return res.end(JSON.stringify(createResponse(true, false)));
+    return res.end(
+      JSON.stringify(
+        createResponse(true, { uid: user.FB_AUTH.uid, active: false })
+      )
+    );
   }
 }
