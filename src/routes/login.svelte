@@ -56,6 +56,6 @@
     class="uk-button uk-button-text"
     disabled={!process.env.REGISTRATION_ENABLED}
   >
-    Register {!process.env.REGISTRATION_ENABLED && "(disabled)"}
+    Register {process.env.REGISTRATION_ENABLED ? "" : "(disabled)"}
   </button>
 </a>
