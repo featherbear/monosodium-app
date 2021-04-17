@@ -12,19 +12,27 @@ export async function createUser(username, password) {
       password: passwordHash,
       sessions: [],
     },
-    FB_AUTH: {
-      uid: null,
-      session: null,
-    },
+    FB_AUTH: null, // null
+    // FB_AUTH: {
+    //   uid: null,
+    //   session: null,
+    // },
     SETTINGS: {},
     QUEUE: [],
   });
 }
 
-export async function getUser(username, password) {
-  let userPreAuth = await Models.User.findOne({
+export async function asUser(username) {
+  let user = await Models.User.findOne({
     "MSG_AUTH.username": username,
   });
+  if (!user) return null;
+
+  return user;
+}
+
+export async function getUser(username, password) {
+  let userPreAuth = await asUser(username);
   if (
     !userPreAuth ||
     !(await bcrypt.compare(password, userPreAuth.MSG_AUTH.password.toString()))
