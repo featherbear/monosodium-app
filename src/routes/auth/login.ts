@@ -15,7 +15,7 @@ export async function post(req, res) {
   let user = await getUser(username, password);
   if (!user) return fail();
 
-  res.cookie("msgSession", await createSession(user), {
+  res.cookie("msgSession", await  createSession(user), {
     httpOnly: true,
     sameSite: "Strict",
   });
