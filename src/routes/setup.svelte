@@ -34,6 +34,11 @@
     isMessengerStatusPolling = true;
 
     // TODO: Send request to login and check UID
+    fetch("actions/connect", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data.auth),
+    });
 
     createMessengerStatusPoll()
       .then((r) => console.log(r))
