@@ -22,3 +22,19 @@ export function createResponse<T>(
     };
   }
 }
+
+createResponse.uhOh = function (res) {
+ res.status(500)
+ res.end(
+   JSON.stringify(
+     createResponse(
+       false,
+       "Hahaha I'm a bad programmer - or you're a good hacker"
+     )
+   )
+ )
+}
+
+createResponse.OK = function(res) {
+  res.end(JSON.stringify(createResponse(true)))
+}

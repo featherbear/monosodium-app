@@ -14,26 +14,9 @@ export function authenticatedRoute (f: (req, res) => any) {
     }
 
     let { username } = req.session
-    if (!username) return uhOh(res)
+    if (!username) return createResponse.uhOh(res)
   
 
     f(req, res)
   }
-}
-
-/**
- * and I oop
- *
- * @param res
- */
-export function uhOh (res) {
-  res.status(500)
-  res.end(
-    JSON.stringify(
-      createResponse(
-        false,
-        "Hahaha I'm a bad programmer - or you're a good hacker"
-      )
-    )
-  )
 }
