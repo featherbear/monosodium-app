@@ -28,25 +28,36 @@
   };
 
   let isMessengerStatusPolling = false;
-  export let messengerCheck: null | { active: boolean; uid: string };
+  export let messengerCheck: null | {
+    active: boolean;
+    uid: string;
+    error?: string;
+  };
 
-  function handleMessengerConnect() {
+  async function handleMessengerConnect() {
     isMessengerStatusPolling = true;
 
-    // TODO: Send request to login and check UID
-    fetch("actions/connect", {
+    await fetch("actions/connect", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data.auth),
     });
 
     createMessengerStatusPoll()
-      .then((r) => console.log(r))
+      .then((r) => ((messengerCheck as any) = r))
       .catch((e) => console.error(e))
       .finally(() => {
         isMessengerStatusPolling = false;
       });
   }
+
+  import { onMount } from "svelte";
+  onMount(() => {
+    if (messengerCheck?.active === null) {
+      isMessengerStatusPolling = true;
+      createMessengerStatusPoll();
+    }
+  });
 
   async function createMessengerStatusPoll() {
     return new Promise((resolve, reject) =>
@@ -55,7 +66,12 @@
           method: "POST",
         }).then((r) => r.json());
         if (!resp.status) return reject(resp.error);
-        if (resp.data === true) return resolve(true);
+        if (
+          resp.data === null /* Uninitialised */ ||
+          resp.data.active !== null /* Everything but pending */
+        ) {
+          return resolve(resp.data);
+        }
         setTimeout(theWholeDamnThing, 2500);
       })()
     );
@@ -64,7 +80,9 @@
   //   let states = {};
 </script>
 
-{#if messengerCheck === null}
+{#if messengerCheck?.active === null}
+  Connecting...
+{:else if messengerCheck === null}
   <form
     class="uk-width-medium"
     on:submit|preventDefault={handleMessengerConnect}
@@ -100,7 +118,9 @@
       )}>Hang on, this is dodgy...</button
   >
 {:else if messengerCheck.active === false}
-  <span>Disconnected from account {messengerCheck.uid}</span>
+  {#if messengerCheck?.uid}<span
+      >Disconnected from account {messengerCheck.uid}</span
+    >{/if}
 
   <form
     class="uk-width-medium"
@@ -121,6 +141,12 @@
       name="password"
       placeholder="Facebook Password"
     />
+
+    {#if messengerCheck.error == "id"}
+      ID mismatch
+    {:else if messengerCheck.error == "credentials"}
+      Bad username password
+    {/if}
 
     {#if isMessengerStatusPolling}
       <div class="uk-button uk-button-primary" uk-spinner />

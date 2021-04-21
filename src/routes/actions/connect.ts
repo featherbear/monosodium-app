@@ -19,20 +19,19 @@ export const post = authenticatedRoute(async function (req, res) {
   }
 
   if (user.FB_AUTH.session) {
-    console.log(user.FB_AUTH.session[0]);
-    if (user.FB_AUTH.session.buffer[0] == 0x3A /* ':' character */) {
-      // TODO: Check for existing connection status
-      console.warn("Credentials being checked")
-      // Cancel previous and start new?
+    if (Buffer.isBuffer(user.FB_AUTH.session.buffer)) {
+      // Already active
+      return createResponse.uhOh(res)
     }
-    else {
-      // TODO: Check for existing active session
-      console.warn("Session already active")
+
+    if (user.FB_AUTH.session?.type === 'auth') {
+      // Credentials already being checked
+      return createResponse.uhOh(res)
     }
   }
 
-  user.FB_AUTH.session = Buffer.concat([Buffer.from(":"), ACrypt.encryptData(Buffer.from(`${btoa(username)}:${btoa(password)}`))])
-  user.save()
+  user.FB_AUTH.session = { type: 'auth', data: ACrypt.encryptData(Buffer.from(`${btoa(username)}:${btoa(password)}`)) }
+  await user.save()
 
   return createResponse.OK(res)
 })

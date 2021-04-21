@@ -35,6 +35,6 @@ createResponse.uhOh = function (res) {
  )
 }
 
-createResponse.OK = function(res) {
-  res.end(JSON.stringify(createResponse(true)))
+createResponse.OK = function(res, data?: any) {
+  res.end(JSON.stringify(createResponse(true, data)))
 }
